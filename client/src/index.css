@@ -1,0 +1,16 @@
+.MuiContainer-root {
+    margin: 0;
+    padding: 0;
+}
+#root {
+    margin: 0;
+    padding: 0;
+}
+iframe {
+    border: 0;
+    display: block;
+    padding: 0px;
+    margin: 10px 0px;
+    position: static; 
+    max-width: 100%;
+}

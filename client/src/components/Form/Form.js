@@ -1,28 +1,51 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 import FileBase from 'react-file-base64';
-import { useDispatch } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
-import { createPost } from '../../actions/posts'
+import { createPost, updatePost } from '../../actions/posts';
 
 
-const Form = () => {
+const Form = ({ currentId, setCurrentId }) => {
     const [postData, setPostData] = useState({
-        creator: '', title: '', message: '', selectedFile: '',
+        title: '', selectedFile: '', link: ''
     });
+    const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null);
     const classes = useStyles();
+    const user = JSON.parse(localStorage.getItem('profile'));
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (post) {
+            setPostData(post);
+        }
+    }, [post]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(createPost(postData));
+
+        if (currentId) {
+            dispatch(updatePost(currentId, { ...postData }));
+        } else {
+            dispatch(createPost({ ...postData }));
+        }
+        clear();
     }
     
     const clear = () => {
-    
+        setCurrentId(null);
+        setPostData({ title: '', selectedFile: '', link: '' });
     }
 
+    // if (!user?.result?.name) {
+    //     return (
+    //         <Paper>
+    //             <Typography variant="h6" align="center">
+    //                 Please log in first.
+    //             </Typography>
+    //         </Paper>
+    //     )
+    // }
     return (
         <Paper className={classes.paper}>
             <form
@@ -30,16 +53,7 @@ const Form = () => {
                 noValidate
                 className={`${classes.root} ${classes.form}`}
                 onSubmit={handleSubmit}>
-                <Typography variant="h6">Creating a Memory</Typography>
-                <TextField
-                    name="creator"
-                    variant="outlined"
-                    label="Creator"
-                    fullWidth
-                    value={postData.creator}
-                    // TODO: use mems.dev -> still don't understand
-                    onChange={(e) => setPostData({ ...postData, creator: e.target.value})}
-                />
+                <Typography variant="h6">{ currentId ? 'Editing' : 'Creating' } Event</Typography>
                 <TextField
                     name="title"
                     variant="outlined"
@@ -47,31 +61,22 @@ const Form = () => {
                     fullWidth
                     value={postData.title}
                     // TODO: use mems.dev -> still don't understand
-                    onChange={(e) => setPostData({ ...postData, creator: e.target.value})}
+                    onChange={(e) => setPostData({ ...postData, title: e.target.value})}
                 />
                 <TextField
-                    name="message"
+                    name="link"
                     variant="outlined"
-                    label="Message"
+                    label="Event Link"
                     fullWidth
-                    value={postData.message}
+                    value={postData.link}
                     // TODO: use mems.dev -> still don't understand
-                    onChange={(e) => setPostData({ ...postData, creator: e.target.value})}
-                />
-                <TextField
-                    name="tags"
-                    variant="outlined"
-                    label="Tags"
-                    fullWidth
-                    value={postData.tags}
-                    // TODO: use mems.dev -> still don't understand
-                    onChange={(e) => setPostData({ ...postData, creator: e.target.value})}
+                    onChange={(e) => setPostData({ ...postData, link: e.target.value})}
                 />
                 <div className={classes.fileInput}>
                     <FileBase
                         type="file"
                         multiple={false}
-                        oneDone={({base64}) => setPostData({ ...postData, selectedFile: base64})}
+                        onDone={({base64}) => setPostData({ ...postData, selectedFile: base64})}
                     />
                 </div>
                 <Button

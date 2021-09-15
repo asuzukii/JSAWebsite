@@ -1,41 +1,50 @@
 import React, { useEffect } from 'react';
-import { Container, AppBar, Typography, Grow, Grid } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
+import { Container } from '@material-ui/core';
+import { BrowserRouter, Switch, Route, useLocation } from 'react-router-dom';
 
-import { getPosts } from './actions/posts';
-import Posts from './components/Posts/Posts.js';
-import Form from './components/Form/Form.js';
-import memories from './images/memories.png';
-import useStyles from './styles.js';
+import useStyles from './styles';
+import Navbar from './components/Navbar/Navbar.js';
+import Home from './components/Home/Home.js';
+import Auth from './components/Auth/Auth.js';
+import About from './components/About/About.js';
+import Career from './components/Career/Career.js';
+import Events from './components/Events/Events.js';
+import Membership from './components/Membership/Membership.js';
+import Contact from './components/Contact/Contact.js';
+import Footer from './components/Footer/Footer.js';
 
+// this function scrolls each page back up to top which
+// doesn't happen by default
+function ScrollToTop() {
+    const { pathname } = useLocation();
+  
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [pathname]);
+  
+    return null;
+  }
+  
 const App = () => {
     const classes = useStyles();
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(getPosts());
-    }, [dispatch]);
     return (
-        <Container maxWidth="lg">
-            <AppBar className={classes.appBar} position="static" color="inherit">
-                <Typography className={classes.heading} variant="h2" align="center">Memories</Typography>
-                <img className={classes.image} src={memories} alt="memories" height="60" />
-            </AppBar>
-            <Grow in>
-                <Container>
-                    <Grid container justify="space-between" alignItems="stretch" spacing={3}>
-                        <Grid item xs={12} sm={7}>
-                            <Posts />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <Form />
-                        </Grid>
-                    </Grid>
-                </Container>
-            </Grow>
+    <BrowserRouter>
+        <Container className={classes.container}>
+            <Navbar />
+            <ScrollToTop />
+            <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/about" exact component={About} />
+                <Route path="/auth" exact component={Auth} />
+                <Route path="/career" exact component={Career} />
+                <Route path="/events" exact component={Events} />
+                <Route path="/membership" exact component={Membership} />
+                <Route path="/contact" exact component={Contact} />
+            </Switch>
+            <Footer />
         </Container>
+    </BrowserRouter>
     );
-}
+};
 
-// makes the App object importable in other files
 export default App; 
