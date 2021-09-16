@@ -17,6 +17,10 @@ app.use('/events', postRoutes);
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
 
+app.get('/', (req, res) => {
+  res.send('Hello to Memories API');
+});
+
 // we are going to secure this later
 const PORT = process.env.PORT || 5000;
 
