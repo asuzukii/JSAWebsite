@@ -13,7 +13,7 @@ app.use(express.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
 
 // the posts.js file is ran every time the /posts is accessed
-app.use('/events', postRoutes);
+// app.use('/events', postRoutes);
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
 
