@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 });
 
 // we are going to secure this later
-const PORT = process.env.PORT || 5000;
+const { PORT } = process.env;
 
 // attempts to connect to the given url, then listens to the given port if successful
 mongoose.connect(process.env.CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
